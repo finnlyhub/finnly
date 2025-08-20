@@ -1,11 +1,85 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Olá Mundo</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Finnly — Apresentação</title>
+  <link rel="stylesheet" href="index.css" />
 </head>
 <body>
-    
+
+  <!-- Splash / Carregamento -->
+  <section id="splash" class="splash" role="status" aria-live="polite" aria-label="Carregando">
+    <div class="splash-inner">
+      <img class="splash-logo" src="assets/logocolorido.png" alt="Logo Finnly" />
+      <h1 class="splash-title">Finnly</h1>
+
+      <div class="loader" aria-hidden="true">
+        <span class="loader-ball"></span>
+      </div>
+
+      <span class="sr-only">Carregando…</span>
+    </div>
+  </section>
+
+  <!-- Onboarding (começa oculto; JS remove .hidden após o splash) -->
+  <section id="onboarding" class="onboarding hidden" role="dialog" aria-modal="true" aria-label="Apresentação do aplicativo">
+    <div class="phone">
+      <!-- Slides -->
+      <div class="slides" aria-live="polite">
+        <!-- Slide 1 -->
+        <article class="slide is-active" data-index="0">
+          <div class="slide-bg" style="--bg: url('assets/mascote3d/ola.png');"></div>
+          <div class="slide-body">
+            <h2>Controle total das suas finanças</h2>
+            <p>Registre receitas e despesas em segundos e acompanhe tudo de forma simples e intuitiva.</p>
+          </div>
+        </article>
+
+        <!-- Slide 2 -->
+        <article class="slide" data-index="1">
+          <div class="slide-bg" style="--bg: url('assets/mascote3d/uau.png');"></div>
+          <div class="slide-body">
+            <h2>Veja para onde vai seu dinheiro</h2>
+            <p>Gráficos e relatórios claros mostram seus maiores gastos e oportunidades de economia.</p>
+          </div>
+        </article>
+
+        <!-- Slide 3 -->
+        <article class="slide" data-index="2">
+          <div class="slide-bg" style="--bg: url('assets/mascote3d/ufa.png');"></div>
+          <div class="slide-body">
+            <h2>Seu futuro financeiro começa aqui</h2>
+            <p>Planeje, economize e alcance suas metas com o apoio do Finnly.</p>
+          </div>
+        </article>
+      </div>
+
+      <!-- Footer do slide -->
+      <footer class="slide-footer">
+        <div class="dots" role="tablist" aria-label="Progresso">
+          <button class="dot is-active" data-go="0" role="tab" aria-selected="true" aria-label="Tela 1"></button>
+          <button class="dot" data-go="1" role="tab" aria-selected="false" aria-label="Tela 2"></button>
+          <button class="dot" data-go="2" role="tab" aria-selected="false" aria-label="Tela 3"></button>
+        </div>
+
+        <div class="actions">
+          <div class="actions-left">
+            <button id="btn-continue" class="btn btn-primary">CONTINUE</button>
+            <button id="btn-back" class="btn btn-back" hidden>Voltar</button>
+          </div>
+          <button id="btn-skip" class="btn btn-ghost">PULAR →</button>
+        </div>
+      </footer>
+    </div>
+  </section>
+
+  <!-- Conteúdo do app (fica oculto até concluir o onboarding) -->
+  <main id="app" class="app hidden" tabindex="-1">
+    <h1>Finnly</h1>
+    <p>Apresentação concluída.</p>
+  </main>
+
+  <script defer src="index.js"></script>
 </body>
 </html>
