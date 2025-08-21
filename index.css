@@ -17,28 +17,38 @@ body {
 @font-face { font-family:"Nimbus Sans"; src:url("/assets/fonts/NimbusSans-Bold.woff2")    format("woff2"); font-weight:700; font-style:normal; font-display:swap; }
 */
 
-/* Paleta centralizada em variáveis */
+/* Paleta + safe-area vars */
 :root{
-  --bg-deep: #0e3a39;   /* fundo externo */
-  --panel:   #0b2f2e;   /* painel/base dos conteúdos */
-  --text:    #F8FAFC;   /* branco dos textos */
-  --muted:   #8EB4B1;   /* cinza/azulado neutro */
-  --accent:  #ff8a3d;   /* laranja (botão/dots) */
+  --bg-deep: #0e3a39;
+  --panel:   #0b2f2e;
+  --text:    #F8FAFC;
+  --muted:   #8EB4B1;
+  --accent:  #ff8a3d;
+
+  --safe-top:    env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Bloqueia rolagem/bounce da página */
+html, body{
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 
 /* =========================================================
    LAYOUT PRINCIPAL
    ======================================================= */
-/* Corrige viewport no mobile e ocupa a tela toda */
 .onboarding{
-  min-height: 100svh; /* iOS */
-  min-height: 100dvh; /* Android/desktop */
+  /* ocupa a viewport real e respeita safe-areas */
+  height: 100svh;
+  height: 100dvh;
+  min-height: 100svh;
+  min-height: 100dvh;
   display: grid;
   place-items: stretch;
   background: var(--bg-deep);
 }
 
-/* Container da “tela do app” (sem moldura) */
 .phone{
   width: 100%;
   height: 100%;
@@ -48,7 +58,6 @@ body {
   background: var(--panel);
 }
 
-/* Área que contém todos os slides (cada slide é “full”) */
 .slides{
   position: relative;
   width: 100%;
@@ -57,7 +66,7 @@ body {
   background: var(--panel);
 }
 
-/* Cada slide vira um grid: imagem (72%) + texto (28%) */
+/* imagem (72%) + texto (28%) */
 .slide{
   position: absolute;
   inset: 0;
@@ -71,16 +80,19 @@ body {
 .slide.is-active{ opacity: 1; transform: translateX(0); }
 
 /* =========================================================
-   IMAGEM DO SLIDE (como background)
+   IMAGEM (como background) + safe-area
    ======================================================= */
-/* Use no HTML: <div class="slide-bg" style="--bg:url('...')"></div> */
 .slide-bg{
   position: absolute;
-  inset: 0;
-  background-image: var(--bg, none);   /* ou style="background-image:url(...)" */
-  background-size: cover;               /* cobre a tela toda */
+  left: 0; right: 0;
+  /* sobe por trás da status bar (notch) */
+  top: calc(-1 * var(--safe-top));
+  bottom: 0;
+
+  background-image: var(--bg, none);
+  background-size: cover;
   background-repeat: no-repeat;
-  background-position: center 55%;      /* 54–57% = mostra mais o corpo */
+  background-position: center 55%;      /* 54–57%: mostra mais o corpo */
   z-index: 0;
 }
 
@@ -89,8 +101,8 @@ body {
   content: "";
   position: absolute;
   left: 0; right: 0;
-  top: calc(72% - 34%);  /* começa dentro da área da imagem */
-  bottom: -3px;          /* será reforçado no patch anti-hairline abaixo */
+  top: calc(72% - 34%);
+  bottom: -3px;  /* reforçado no patch anti-hairline abaixo */
   background: linear-gradient(
     180deg,
     rgba(14,58,57,0) 0%,
@@ -98,17 +110,17 @@ body {
     var(--panel) 100%
   );
   pointer-events: none;
-  z-index: 1;            /* acima do bg, abaixo do texto/footer */
+  z-index: 1;
 }
 
 /* =========================================================
-   TEXTO DO SLIDE
+   TEXTO
    ======================================================= */
 .slide-body{
   grid-row: 2; grid-column: 1 / -1;
   position: relative;
   z-index: 2;
-  padding: 12px 22px 0 22px;   /* distância do topo da área de texto */
+  padding: 12px 22px 0 22px;
   color: var(--text);
 }
 .slide-body h2{
@@ -119,8 +131,8 @@ body {
   line-height: 1.12;
 }
 .slide-body p{
-  margin: 0;                    /* evita empurrar os dots */
-  color: #5FD0D6;               /* tom de azul do print */
+  margin: 0;
+  color: #5FD0D6;               /* azul do mock */
   font-size: clamp(14px, 3.6vw, 15.5px);
 }
 
@@ -128,11 +140,11 @@ body {
    FOOTER (dots + botões)
    ======================================================= */
 .slide-footer{
-  margin-top: -3px; /* será reforçado no patch anti-hairline */
-  padding: 10px 20px calc(18px + env(safe-area-inset-bottom));
+  margin-top: -3px; /* reforçado no patch anti-hairline */
+  padding: 10px 20px calc(18px + var(--safe-bottom));
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: auto auto; /* 1: dots  2: actions */
+  grid-template-rows: auto auto;
   gap: 10px;
   background: var(--panel);
   border-top: none;
@@ -140,20 +152,19 @@ body {
   z-index: 3;
 }
 
-/* Dots — inativos redondos; ativo vira “linha/pílula” laranja */
+/* Dots — inativos redondos; ativo vira pílula/linha laranja */
 .dots{
   display: inline-flex;
-  gap: 6px;          /* distância entre os pontinhos */
+  gap: 6px;
   align-items: center;
   justify-content: flex-start;
-  padding: 0;        /* sem padding para reduzir espaço acima dos dots */
-  margin-bottom: 8px;/* espaço dos dots para os botões */
+  padding: 0;
+  margin-bottom: 8px;
 }
 .dot{
-  width: 8px;
-  height: 8px;
+  width: 8px; height: 8px;
   border-radius: 50%;
-  background: #fff;      /* inativo: bolinha branca */
+  background: #fff;
   border: none;
   padding: 0;
   position: relative;
@@ -163,14 +174,13 @@ body {
 }
 .dot::after{ content: none; }
 .dot.is-active{
-  width: 22px;                 /* comprimento da linha */
-  height: 4px;                 /* espessura da linha */
-  border-radius: 999px;        /* pílula */
-  background: var(--accent);   /* laranja */
+  width: 22px; height: 4px;
+  border-radius: 999px;
+  background: var(--accent);
   border: none;
 }
 
-/* Botões (CONTINUE à esquerda, PULAR à direita) */
+/* Botões */
 .actions{
   width: 100%;
   display: flex;
@@ -195,7 +205,6 @@ body {
 }
 .btn:active{ transform: translateY(1px); }
 
-/* CONTINUE: laranja com texto branco e mais padding (alto/largo) */
 .btn-primary{
   background: var(--accent);
   color: #fff;
@@ -204,11 +213,10 @@ body {
 }
 .btn-primary:hover{ filter: brightness(1.05); }
 
-/* VOLTAR: texto puro, sem fundo, branco fraquinho */
 .btn-back{
   background: transparent;
   border: none;
-  padding: 0;                              /* sem “caixa” */
+  padding: 0;
   color: rgba(255,255,255,.55);
   cursor: pointer;
   font-weight: 700;
@@ -216,9 +224,8 @@ body {
 }
 .btn-back:hover{ color: rgba(255,255,255,.85); text-decoration: underline; }
 .btn-back:focus-visible{ outline: 2px solid rgba(255,255,255,.35); outline-offset: 2px; }
-.btn-back[hidden]{ display: none !important; } /* some no 1º slide */
+.btn-back[hidden]{ display: none !important; }
 
-/* PULAR: fantasma (texto branco) */
 .btn-ghost{
   background: transparent;
   color: var(--text);
@@ -230,7 +237,6 @@ body {
 /* Utilidades */
 .hidden{ display: none !important; }
 
-/* Acessibilidade: sem animações para quem prefere menos movimento */
 @media (prefers-reduced-motion: reduce){
   .slide{ transition: none; }
 }
@@ -241,10 +247,13 @@ body {
 .splash{
   position: fixed;
   inset: 0;
-  background: #0f5250;      /* sua cor do splash */
+  padding-top: var(--safe-top);          /* ocupa a status bar */
+  background: #0f5250;
   display: grid;
   place-items: center;
-  z-index: 999;             /* acima de tudo */
+  z-index: 999;
+  height: 100svh;
+  height: 100dvh;
 }
 .splash-inner{
   display: grid;
@@ -252,12 +261,11 @@ body {
   gap: 14px;
   padding: 24px;
 }
-
 .splash-logo{
-  width: 80px;
-  height: 80px;
+  width: clamp(56px, 14vw, 72px);
+  height: auto;
   display: block;
-  border-radius: 14px;      /* se seu ícone for quadrado */
+  border-radius: 14px;
 }
 .splash-title{
   margin: 0;
@@ -266,8 +274,6 @@ body {
   font-size: clamp(24px, 6vw, 32px);
   letter-spacing: .2px;
 }
-
-/* bolinha de carregamento */
 .loader{ height: 22px; display: grid; place-items: center; }
 .loader-ball{
   width: 10px; height: 10px;
@@ -279,8 +285,6 @@ body {
   0%,100%{ transform: scale(.85); opacity: .6; }
   50%    { transform: scale(1.15); opacity: 1;  }
 }
-
-/* utilidade para leitores de tela */
 .sr-only{
   position: absolute !important;
   width: 1px; height: 1px; padding: 0; margin: -1px;
@@ -290,19 +294,16 @@ body {
 /* =========================================================
    PATCH ANTI-HAIRLINE (subpixel)
    ======================================================= */
-/* 1) Overlap maior do gradiente do slide */
-.slide::after{ bottom: -8px; }
-
-/* 2) Footer sobrepondo mais para cima e com véu */
+.slide::after{ bottom: -8px; }          /* 1) overlap maior */
 .slide-footer{
-  margin-top: -8px;
+  margin-top: -8px;                     /* 2) footer sobrepondo mais */
   overflow: visible;
 }
 .slide-footer::before{
   content: "";
   position: absolute;
   left: 0; right: 0;
-  top: -16px;               /* cobre a junção de cima pra baixo */
+  top: -16px;
   height: 20px;
   pointer-events: none;
   background: linear-gradient(
@@ -312,11 +313,10 @@ body {
     var(--panel) 100%
   );
 }
-
-/* 3) Uniformiza backgrounds na área da junção */
+/* 3) Uniformiza backgrounds */
 .slides, .slide, .slide-footer{ background-color: var(--panel); }
 
-/* 4) Hint de composição (Safari/iOS) para evitar serrilhado */
+/* 4) Hint de composição (Safari/iOS) */
 @supports (-webkit-touch-callout: none) {
   .slide, .slide::after, .slide-footer{
     -webkit-transform: translateZ(0);
