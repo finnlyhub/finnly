@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Login • Finnly</title>
+  <link rel="stylesheet" href="login.css" />
+</head>
+<body>
+  <!-- BG: troque o src abaixo para o seu arquivo 1080x1920 -->
+  <img class="bg-image" src="assets/backgroundlogin.png" alt="" aria-hidden="true" />
+
+  <!-- Overlay para deixar o fundo mais legível -->
+  <div class="bg-overlay"></div>
+
+  <main class="login">
+    <!-- Logo: troque o src abaixo para o seu logo laranja -->
+    <div class="brand">
+      <img class="brand-logo" src="assets/logocolorido.webp" alt="Finnly" />
+    </div>
+
+    <h1 class="title">
+      <span>Bem-vindo</span>
+      <span class="brand-name">Ao Finnly</span>
+    </h1>
+    <p class="subtitle">Entre para continuar</p>
+
+    <form class="form" id="loginForm" autocomplete="on" novalidate>
+      <label class="field">
+        <input type="email" id="email" name="email" placeholder="E-mail" inputmode="email" required />
+      </label>
+
+      <label class="field field-password">
+        <input type="password" id="password" name="password" placeholder="Senha" required />
+        <button type="button" class="toggle-pass" aria-controls="password" aria-label="Mostrar senha">Mostrar</button>
+      </label>
+
+      <button type="submit" class="btn-primary">ENTRAR</button>
+    </form>
+
+    <div class="divider">
+      <span class="line"></span>
+      <span class="or">ou</span>
+      <span class="line"></span>
+    </div>
+
+    <div class="social">
+      <!-- Ícones apenas, sem texto -->
+      <button class="social-btn" aria-label="Entrar com Google" id="googleBtn">
+        <!-- Você pode trocar estes SVGs pelos seus arquivos .svg -->
+        <svg viewBox="0 0 24 24" class="icon" aria-hidden="true">
+          <circle cx="12" cy="12" r="11.25" stroke="currentColor" fill="none" stroke-width="1.5"/>
+          <path d="M21 12.23c0-.63-.06-1.23-.18-1.82H12v3.44h5.06a4.31 4.31 0 0 1-1.87 2.83v2.34h3.02c1.77-1.63 2.79-4.03 2.79-6.79Z" fill="currentColor"/>
+          <path d="M12 22c2.52 0 4.64-.83 6.18-2.24l-3.02-2.34c-.84.56-1.93.9-3.16.9-2.43 0-4.49-1.64-5.22-3.85H3.63v2.43A9.99 9.99 0 0 0 12 22Z" fill="currentColor" opacity=".7"/>
+          <path d="M6.78 14.47A6.02 6.02 0 0 1 6.47 12c0-.86.19-1.68.53-2.42V7.15H3.63A10 10 0 0 0 2 12c0 1.62.39 3.15 1.07 4.5l3.71-2.03Z" fill="currentColor" opacity=".45"/>
+          <path d="M12 5.76c1.37 0 2.6.47 3.57 1.39l2.67-2.67A9.96 9.96 0 0 0 12 2a9.99 9.99 0 0 0-8.37 5.15l3.71 2.43C8.11 7.4 9.94 5.76 12 5.76Z" fill="currentColor" opacity=".25"/>
+        </svg>
+      </button>
+
+      <button class="social-btn" aria-label="Entrar com Facebook" id="facebookBtn">
+        <svg viewBox="0 0 24 24" class="icon" aria-hidden="true">
+          <circle cx="12" cy="12" r="11.25" stroke="currentColor" fill="none" stroke-width="1.5"/>
+          <path d="M13.5 10.5H15V8h-1.5c-1.24 0-2.25 1.01-2.25 2.25V12H9v2.25h2.25V20h2.25v-5.75H15L15.38 12H13.5v-1.5c0-.28.22-.5.5-.5Z" fill="currentColor"/>
+        </svg>
+      </button>
+    </div>
+
+    <p class="register">
+      Não tem conta?
+      <a href="#" id="registerLink">Registrar</a>
+    </p>
+  </main>
+
+  <script src="login.js"></script>
+</body>
+</html>

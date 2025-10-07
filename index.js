@@ -9,8 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const dots         = $$('.dot');
   const btnContinue  = $('#btn-continue');
   const btnSkip      = $('#btn-skip');
-  const btnBack      = $('#btn-back'); // texto puro "Voltar", sem fundo
+  const btnBack      = $('#btn-back'); // "Voltar" (texto puro)
   const slidesRoot   = $('.slides');
+  const splash       = $('#splash');
+  const onboarding   = $('#onboarding');
+  const app          = $('#app');
 
   // Estado
   let current   = 0;
@@ -21,10 +24,16 @@ document.addEventListener('DOMContentLoaded', () => {
   function goTo(index){
     current = Math.max(0, Math.min(index, slides.length - 1));
 
-    slides.forEach((el, i) => el.classList.toggle('is-active', i === current));
+    slides.forEach((el, i) => {
+      const active = i === current;
+      el.classList.toggle('is-active', active);
+      el.setAttribute('aria-hidden', String(!active));
+    });
+
     dots.forEach((d, i) => {
-      d.classList.toggle('is-active', i === current);
-      d.setAttribute('aria-selected', String(i === current));
+      const active = i === current;
+      d.classList.toggle('is-active', active);
+      d.setAttribute('aria-selected', String(active));
     });
 
     // Texto do botão principal
@@ -50,19 +59,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Concluir onboarding
+  // Concluir onboarding → vai para login.html
   function done(){
     try {
       localStorage.setItem(KEY_DONE, '1');
     } catch (_) { /* ignore storage errors */ }
-    finishOnboarding();
-  }
 
-  function finishOnboarding(){
-    $('#onboarding')?.classList.add('hidden');
-    const app = $('#app');
-    app?.classList.remove('hidden');
-    app?.focus();
+    // Use replace para evitar voltar ao onboarding com o botão "Voltar" do navegador
+    const to = new URL('./login.html', window.location.href);
+    window.location.replace(to.href);
   }
 
   // Eventos de clique
@@ -74,10 +79,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!Number.isNaN(idx)) goTo(idx);
   }));
 
-  // Teclado ← →
+  // Teclado ← → (Esc pula)
   window.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') next();
     if (e.key === 'ArrowLeft')  goTo(current - 1);
+    if (e.key === 'Escape')     done();
   });
 
   // Swipe (mobile)
@@ -85,11 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
     slidesRoot.addEventListener('touchstart', (e) => {
       isSwiping = true;
       startX = e.touches[0].clientX;
-    }, { passive: true });
-
-    slidesRoot.addEventListener('touchmove', (e) => {
-      if (!isSwiping) return;
-      // Mantemos simples: só detecta direção ao soltar
     }, { passive: true });
 
     slidesRoot.addEventListener('touchend', (e) => {
@@ -105,19 +106,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Inicial
   goTo(0);
-});
 
-document.addEventListener('DOMContentLoaded', () => {
-  const splash      = document.querySelector('#splash');
-  const onboarding  = document.querySelector('#onboarding');
-
-  // Tempo mínimo do splash (ajuste se quiser)
+  // Splash -> Onboarding
   const MIN_SPLASH_MS = 3000;
-
   setTimeout(() => {
     splash?.classList.add('hidden');        // esconde splash
     onboarding?.classList.remove('hidden'); // mostra onboarding
+    // app permanece oculto até o login.html (pós-onboarding)
   }, MIN_SPLASH_MS);
-
-  /* ...resto do seu código já existente (slides, dots, voltar etc.)... */
 });
